@@ -2,9 +2,10 @@ name: pylon-mcp-server
 displayName: Pylon MCP Server
 description: MCP server for integrating with Pylon API - manage contacts, issues, and knowledge base articles
 version: 1.0.0
+featured: false
 author: Marcin Wyszynski
-homepage: https://github.com/marcinwyszynski/pylon-mcp-server
-license: MIT
+github: https://github.com/marcinwyszynski/pylon-mcp
+readme: https://github.com/marcinwyszynski/pylon-mcp/blob/main/README.md
 keywords:
   - pylon
   - support
