@@ -14,4 +14,4 @@ startCommand:
         secret: true
         required: true
   commandFunction: |-
-    config => ({ command: 'node', args: ['build/index.js'], env: { PYLON_API_TOKEN: config.pylonApiToken } })
+    config => ({ command: 'node', args: ['dist/index.js'], env: { PYLON_API_TOKEN: config.pylonApiToken } })
