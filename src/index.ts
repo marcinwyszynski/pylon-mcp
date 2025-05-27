@@ -35,7 +35,7 @@ const server = new Server(
 const tools: Tool[] = [
   {
     name: 'pylon_get_me',
-    description: 'Get current user information from Pylon',
+    description: 'Get current user information from Pylon. Returns your user profile including name, email, role, and permissions. Use this to verify your authentication and see what access level you have.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -43,58 +43,58 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_get_contacts',
-    description: 'Get contacts from Pylon with optional search and limit',
+    description: 'Get customer contacts from Pylon. Use this to find customers who have submitted support tickets or inquiries. Returns contact details like name, email, company, and contact history.',
     inputSchema: {
       type: 'object',
       properties: {
-        search: { type: 'string', description: 'Search term for contacts' },
-        limit: { type: 'number', description: 'Maximum number of contacts to return' },
+        search: { type: 'string', description: 'Search contacts by name, email, or company. Examples: "john@example.com", "Acme Corp", "John Smith"' },
+        limit: { type: 'number', description: 'Maximum number of contacts to return (1-100). Default is 20. Example: 50' },
       },
     },
   },
   {
     name: 'pylon_create_contact',
-    description: 'Create a new contact in Pylon',
+    description: 'Create a new customer contact in Pylon. Use this when adding a new customer who will submit support requests or access your customer portal.',
     inputSchema: {
       type: 'object',
       properties: {
-        email: { type: 'string', description: 'Contact email address' },
-        name: { type: 'string', description: 'Contact name' },
-        portal_role: { type: 'string', description: 'Portal role for the contact' },
+        email: { type: 'string', description: 'Contact email address. Must be valid email format. Example: "sarah@company.com"' },
+        name: { type: 'string', description: 'Full name of the contact. Example: "Sarah Johnson"' },
+        portal_role: { type: 'string', description: 'Role in customer portal: "admin", "member", "viewer". Determines access level. Example: "member"' },
       },
       required: ['email', 'name'],
     },
   },
   {
     name: 'pylon_get_issues',
-    description: 'Get issues from Pylon with optional filtering',
+    description: 'Get support issues/tickets from Pylon. Returns a list of customer support requests with details like title, status, priority, and assigned team member. Use this to see your workload or find specific issues.',
     inputSchema: {
       type: 'object',
       properties: {
-        assignee: { type: 'string', description: 'Filter by assignee' },
-        status: { type: 'string', description: 'Filter by status' },
-        limit: { type: 'number', description: 'Maximum number of issues to return' },
+        assignee: { type: 'string', description: 'Filter by assigned team member. Use email or user ID. Examples: "john@support.com", "user_123"' },
+        status: { type: 'string', description: 'Filter by issue status. Options: "open", "in_progress", "pending", "resolved", "closed". Example: "open"' },
+        limit: { type: 'number', description: 'Maximum number of issues to return (1-100). Default is 50. Example: 25' },
       },
     },
   },
   {
     name: 'pylon_create_issue',
-    description: 'Create a new issue in Pylon',
+    description: 'Create a new support issue/ticket in Pylon. Use this to log customer problems, bug reports, or feature requests that need to be tracked and resolved.',
     inputSchema: {
       type: 'object',
       properties: {
-        title: { type: 'string', description: 'Issue title' },
-        description: { type: 'string', description: 'Issue description' },
-        status: { type: 'string', description: 'Issue status' },
-        priority: { type: 'string', description: 'Issue priority' },
-        assignee: { type: 'string', description: 'Issue assignee' },
+        title: { type: 'string', description: 'Brief title describing the issue. Examples: "Login page not loading", "Cannot upload files", "Billing question"' },
+        description: { type: 'string', description: 'Detailed description of the issue, including steps to reproduce and impact. Example: "User reports that clicking login button shows error message. Affects all Chrome users on Windows."' },
+        status: { type: 'string', description: 'Initial status: "open", "in_progress", "pending", "resolved", "closed". Usually "open" for new issues. Example: "open"' },
+        priority: { type: 'string', description: 'Priority level: "low", "medium", "high", "urgent". Example: "high"' },
+        assignee: { type: 'string', description: 'Team member to assign (optional). Use email or user ID. Example: "support@company.com"' },
       },
       required: ['title', 'description', 'status', 'priority'],
     },
   },
   {
     name: 'pylon_get_knowledge_bases',
-    description: 'Get all knowledge bases from Pylon',
+    description: 'Get all knowledge bases from Pylon. Knowledge bases contain help articles, FAQs, and documentation that customers can access. Returns list of available knowledge bases with their names and article counts.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -102,31 +102,31 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_get_knowledge_base_articles',
-    description: 'Get articles from a specific knowledge base',
+    description: 'Get help articles from a specific knowledge base. Use this to find existing documentation that might help resolve customer issues or to see what self-service content is available.',
     inputSchema: {
       type: 'object',
       properties: {
-        knowledge_base_id: { type: 'string', description: 'Knowledge base ID' },
+        knowledge_base_id: { type: 'string', description: 'ID of the knowledge base to get articles from. Get this from pylon_get_knowledge_bases first. Example: "kb_123abc"' },
       },
       required: ['knowledge_base_id'],
     },
   },
   {
     name: 'pylon_create_knowledge_base_article',
-    description: 'Create a new article in a knowledge base',
+    description: 'Create a new help article in a knowledge base. Use this to add new documentation, FAQs, or troubleshooting guides that customers can access for self-service support.',
     inputSchema: {
       type: 'object',
       properties: {
-        knowledge_base_id: { type: 'string', description: 'Knowledge base ID' },
-        title: { type: 'string', description: 'Article title' },
-        content: { type: 'string', description: 'Article content' },
+        knowledge_base_id: { type: 'string', description: 'ID of the knowledge base to add article to. Example: "kb_123abc"' },
+        title: { type: 'string', description: 'Article title that clearly describes the topic. Examples: "How to Reset Your Password", "Troubleshooting Login Issues", "Billing FAQ"' },
+        content: { type: 'string', description: 'Full article content in markdown or HTML format. Include step-by-step instructions, screenshots, and links. Example: "## Steps to Reset Password\n1. Go to login page\n2. Click Forgot Password..."' },
       },
       required: ['knowledge_base_id', 'title', 'content'],
     },
   },
   {
     name: 'pylon_get_teams',
-    description: 'Get all teams from Pylon',
+    description: 'Get all support teams from Pylon. Teams are groups of support agents that handle different types of issues (e.g., Technical, Billing, Sales). Returns team names, member counts, and specializations.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -134,31 +134,31 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_get_team',
-    description: 'Get a specific team by ID',
+    description: 'Get detailed information about a specific support team. Returns team members, their roles, current workload, and team performance metrics.',
     inputSchema: {
       type: 'object',
       properties: {
-        team_id: { type: 'string', description: 'Team ID' },
+        team_id: { type: 'string', description: 'ID of the team to get details for. Get this from pylon_get_teams first. Example: "team_456def"' },
       },
       required: ['team_id'],
     },
   },
   {
     name: 'pylon_create_team',
-    description: 'Create a new team',
+    description: 'Create a new support team in Pylon. Use this to organize support agents into specialized groups for handling different types of customer issues (e.g., Technical Support, Billing, Enterprise accounts).',
     inputSchema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: 'Team name' },
-        description: { type: 'string', description: 'Team description' },
-        members: { type: 'array', items: { type: 'string' }, description: 'Team member IDs' },
+        name: { type: 'string', description: 'Team name that describes their specialization. Examples: "Technical Support", "Billing Team", "Enterprise Support", "Level 2 Support"' },
+        description: { type: 'string', description: 'Description of team responsibilities and expertise. Example: "Handles complex technical issues, API questions, and integration support"' },
+        members: { type: 'array', items: { type: 'string' }, description: 'Array of user IDs or emails of team members. Example: ["john@company.com", "user_123", "sarah@company.com"]' },
       },
       required: ['name'],
     },
   },
   {
     name: 'pylon_get_accounts',
-    description: 'Get all accounts from Pylon',
+    description: 'Get all customer accounts from Pylon. Accounts represent companies or organizations that use your service. Returns account details like company name, subscription level, and contact information.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -166,29 +166,29 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_get_account',
-    description: 'Get a specific account by ID',
+    description: 'Get detailed information about a specific customer account. Returns company details, subscription info, billing status, and associated contacts and issues.',
     inputSchema: {
       type: 'object',
       properties: {
-        account_id: { type: 'string', description: 'Account ID' },
+        account_id: { type: 'string', description: 'ID of the account to get details for. Get this from pylon_get_accounts or customer records. Example: "acc_789xyz"' },
       },
       required: ['account_id'],
     },
   },
   {
     name: 'pylon_search_users',
-    description: 'Search for users in Pylon',
+    description: 'Search for team members and support agents in Pylon. Use this to find colleagues by name, email, or department when assigning issues or checking availability.',
     inputSchema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'Search query for users' },
+        query: { type: 'string', description: 'Search term to find users by name, email, or department. Examples: "john", "support@company.com", "technical team"' },
       },
       required: ['query'],
     },
   },
   {
     name: 'pylon_get_users',
-    description: 'Get all users from Pylon',
+    description: 'Get all team members and support agents in your Pylon workspace. Returns user profiles including names, roles, teams, and availability status.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -196,92 +196,92 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_search_contacts',
-    description: 'Search for contacts in Pylon',
+    description: 'Search for customer contacts in Pylon by name, email, company, or other details. Use this to quickly find a specific customer when you need to view their information or create an issue for them.',
     inputSchema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'Search query for contacts' },
+        query: { type: 'string', description: 'Search term to find contacts. Can search by name, email, company, or phone. Examples: "alice@example.com", "Acme Corporation", "John Smith", "+1-555-0123"' },
       },
       required: ['query'],
     },
   },
   {
     name: 'pylon_search_issues',
-    description: 'Search for issues in Pylon',
+    description: 'Search for support issues/tickets in Pylon by keywords, customer name, or issue content. Use this to find related issues, check for duplicates, or research similar problems.',
     inputSchema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'Search query for issues' },
-        filters: { type: 'object', description: 'Additional search filters' },
+        query: { type: 'string', description: 'Search term to find issues. Can search in titles, descriptions, and customer names. Examples: "login error", "billing question", "API timeout", "John Smith"' },
+        filters: { type: 'object', description: 'Additional filters as key-value pairs. Examples: {"status": "open", "priority": "high"}, {"assignee": "john@company.com", "created_after": "2024-01-01"}' },
       },
       required: ['query'],
     },
   },
   {
     name: 'pylon_get_issue',
-    description: 'Get a specific issue by ID',
+    description: 'Get complete details of a specific support issue/ticket. Returns full issue information including title, description, status, priority, assignee, customer info, and conversation history.',
     inputSchema: {
       type: 'object',
       properties: {
-        issue_id: { type: 'string', description: 'Issue ID' },
+        issue_id: { type: 'string', description: 'ID of the issue to retrieve. Get this from pylon_get_issues or pylon_search_issues. Example: "issue_abc123"' },
       },
       required: ['issue_id'],
     },
   },
   {
     name: 'pylon_update_issue',
-    description: 'Update an existing issue',
+    description: 'Update an existing support issue/ticket. Use this to change status (e.g., mark as resolved), reassign to different team members, update priority, or modify details as you work on the issue.',
     inputSchema: {
       type: 'object',
       properties: {
-        issue_id: { type: 'string', description: 'Issue ID' },
-        title: { type: 'string', description: 'Issue title' },
-        description: { type: 'string', description: 'Issue description' },
-        status: { type: 'string', description: 'Issue status' },
-        priority: { type: 'string', description: 'Issue priority' },
-        assignee: { type: 'string', description: 'Issue assignee' },
+        issue_id: { type: 'string', description: 'ID of the issue to update. Example: "issue_abc123"' },
+        title: { type: 'string', description: 'New title for the issue. Example: "RESOLVED: Login page not loading"' },
+        description: { type: 'string', description: 'Updated description with new information or resolution details. Example: "Fixed CSS conflict causing login button to not render properly."' },
+        status: { type: 'string', description: 'New status: "open", "in_progress", "pending", "resolved", "closed". Example: "resolved"' },
+        priority: { type: 'string', description: 'New priority level: "low", "medium", "high", "urgent". Example: "medium"' },
+        assignee: { type: 'string', description: 'New assignee email or user ID. Example: "tech-lead@company.com"' },
       },
       required: ['issue_id'],
     },
   },
   {
     name: 'pylon_snooze_issue',
-    description: 'Snooze an issue until a specified time',
+    description: 'Temporarily hide an issue until a future date/time. Use this for issues that cannot be worked on now but need follow-up later (e.g., waiting for customer response, scheduled maintenance, feature release).',
     inputSchema: {
       type: 'object',
       properties: {
-        issue_id: { type: 'string', description: 'Issue ID' },
-        until: { type: 'string', description: 'Snooze until date/time (ISO format)' },
+        issue_id: { type: 'string', description: 'ID of the issue to snooze. Example: "issue_abc123"' },
+        until: { type: 'string', description: 'Date and time when issue should reappear (ISO 8601 format). Examples: "2024-01-15T09:00:00Z" (specific date/time), "2024-01-20T00:00:00Z" (beginning of day)' },
       },
       required: ['issue_id', 'until'],
     },
   },
   {
     name: 'pylon_get_issue_messages',
-    description: 'Get messages for a specific issue',
+    description: 'Get the conversation history for a specific support issue. Returns all messages between customer and support team, including timestamps and sender information. Use this to understand the context and progress of an issue.',
     inputSchema: {
       type: 'object',
       properties: {
-        issue_id: { type: 'string', description: 'Issue ID' },
+        issue_id: { type: 'string', description: 'ID of the issue to get messages for. Example: "issue_abc123"' },
       },
       required: ['issue_id'],
     },
   },
   {
     name: 'pylon_create_issue_message',
-    description: 'Create a new message for an issue',
+    description: 'Add a new message/reply to a support issue conversation. Use this to respond to customers, add internal notes, or provide updates on issue progress.',
     inputSchema: {
       type: 'object',
       properties: {
-        issue_id: { type: 'string', description: 'Issue ID' },
-        content: { type: 'string', description: 'Message content' },
+        issue_id: { type: 'string', description: 'ID of the issue to add message to. Example: "issue_abc123"' },
+        content: { type: 'string', description: 'Message text to send. Can include formatting and links. Examples: "Hi John, I\'ve escalated this to our dev team. You should see a fix by tomorrow.", "**Internal note:** This appears to be related to the server migration last week."' },
       },
       required: ['issue_id', 'content'],
     },
   },
   {
     name: 'pylon_get_tags',
-    description: 'Get all tags from Pylon',
+    description: 'Get all available tags for categorizing issues and contacts. Tags help organize and filter support tickets by topic, urgency, or type (e.g., "bug", "feature-request", "billing", "urgent").',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -289,19 +289,19 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_create_tag',
-    description: 'Create a new tag',
+    description: 'Create a new tag for categorizing issues and contacts. Use this to add new categories that help organize and filter your support tickets effectively.',
     inputSchema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: 'Tag name' },
-        color: { type: 'string', description: 'Tag color' },
+        name: { type: 'string', description: 'Tag name that describes the category. Examples: "billing-question", "feature-request", "bug-report", "urgent", "enterprise-customer"' },
+        color: { type: 'string', description: 'Color for the tag in hex format or color name. Examples: "#FF0000", "red", "#00AA00", "blue"' },
       },
       required: ['name'],
     },
   },
   {
     name: 'pylon_get_ticket_forms',
-    description: 'Get all ticket forms from Pylon',
+    description: 'Get all ticket submission forms available to customers. Forms define what information customers provide when creating new support requests (e.g., bug report form, billing inquiry form).',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -309,20 +309,20 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_create_ticket_form',
-    description: 'Create a new ticket form',
+    description: 'Create a new ticket submission form for customers. Use this to customize what information customers provide when creating different types of support requests (bug reports, feature requests, billing questions).',
     inputSchema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: 'Form name' },
-        description: { type: 'string', description: 'Form description' },
-        fields: { type: 'array', description: 'Form fields configuration' },
+        name: { type: 'string', description: 'Form name that describes its purpose. Examples: "Bug Report Form", "Billing Inquiry", "Feature Request", "Technical Support"' },
+        description: { type: 'string', description: 'Description shown to customers explaining when to use this form. Example: "Use this form to report bugs or technical issues with our software."' },
+        fields: { type: 'array', description: 'Array of form field objects defining what information to collect. Example: [{"type": "text", "name": "summary", "required": true}, {"type": "textarea", "name": "steps_to_reproduce"}, {"type": "select", "name": "browser", "options": ["Chrome", "Firefox", "Safari"]}]' },
       },
       required: ['name', 'fields'],
     },
   },
   {
     name: 'pylon_get_webhooks',
-    description: 'Get all webhooks from Pylon',
+    description: 'Get all configured webhooks in Pylon. Webhooks automatically send notifications to external systems when events occur (e.g., new issues created, status changes, messages added).',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -330,24 +330,24 @@ const tools: Tool[] = [
   },
   {
     name: 'pylon_create_webhook',
-    description: 'Create a new webhook',
+    description: 'Create a new webhook to automatically notify external systems when events occur in Pylon. Use this to integrate with Slack, Discord, email systems, or custom applications.',
     inputSchema: {
       type: 'object',
       properties: {
-        url: { type: 'string', description: 'Webhook URL' },
-        events: { type: 'array', items: { type: 'string' }, description: 'Events to listen for' },
-        active: { type: 'boolean', description: 'Whether webhook is active' },
+        url: { type: 'string', description: 'HTTPS URL where webhook payloads will be sent. Must be publicly accessible. Examples: "https://hooks.slack.com/services/...", "https://api.myapp.com/webhooks/pylon"' },
+        events: { type: 'array', items: { type: 'string' }, description: 'Array of events to trigger webhook. Examples: ["issue.created", "issue.updated", "issue.resolved"], ["message.created"], ["contact.created", "team.assigned"]' },
+        active: { type: 'boolean', description: 'Whether webhook should start active immediately. Default is true. Example: true' },
       },
       required: ['url', 'events'],
     },
   },
   {
     name: 'pylon_delete_webhook',
-    description: 'Delete a webhook',
+    description: 'Delete an existing webhook to stop sending notifications to an external system. Use this when removing integrations or cleaning up unused webhooks.',
     inputSchema: {
       type: 'object',
       properties: {
-        webhook_id: { type: 'string', description: 'Webhook ID' },
+        webhook_id: { type: 'string', description: 'ID of the webhook to delete. Get this from pylon_get_webhooks. Example: "webhook_xyz789"' },
       },
       required: ['webhook_id'],
     },
