@@ -1,4 +1,5 @@
 # Pylon MCP Server
+[![smithery badge](https://smithery.ai/badge/@marcinwyszynski/pylon-mcp)](https://smithery.ai/server/@marcinwyszynski/pylon-mcp)
 
 An MCP (Model Context Protocol) server for integrating with the Pylon API.
 
@@ -18,6 +19,14 @@ This MCP server provides tools to interact with Pylon's API:
 Set the following environment variable:
 
 - `PYLON_API_TOKEN`: Your Pylon API token (required)
+
+### Installing via Smithery
+
+To install Pylon MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@marcinwyszynski/pylon-mcp):
+
+```bash
+npx -y @smithery/cli install @marcinwyszynski/pylon-mcp --client claude
+```
 
 ### Installation
 
