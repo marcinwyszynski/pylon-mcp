@@ -11,14 +11,14 @@ import { PylonClient } from './pylon-client.js';
 
 const PYLON_API_TOKEN = process.env.PYLON_API_TOKEN;
 
-if (!PYLON_API_TOKEN) {
-  console.error('PYLON_API_TOKEN environment variable is required');
-  process.exit(1);
-}
+// Initialize client only when token is available
+let pylonClient: PylonClient | null = null;
 
-const pylonClient = new PylonClient({
-  apiToken: PYLON_API_TOKEN,
-});
+if (PYLON_API_TOKEN) {
+  pylonClient = new PylonClient({
+    apiToken: PYLON_API_TOKEN,
+  });
+}
 
 const server = new Server(
   {
@@ -360,6 +360,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
+
+  if (!pylonClient) {
+    throw new Error('PYLON_API_TOKEN environment variable is required');
+  }
 
   try {
     switch (name) {
