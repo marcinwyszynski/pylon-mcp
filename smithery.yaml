@@ -1,0 +1,103 @@
+name: pylon-mcp-server
+displayName: Pylon MCP Server
+description: MCP server for integrating with Pylon API - manage contacts, issues, and knowledge base articles
+version: 1.0.0
+author: Community
+homepage: https://github.com/marcinwyszynski/pylon-mcp-server
+license: MIT
+keywords:
+  - pylon
+  - support
+  - helpdesk
+  - knowledge-base
+  - contacts
+  - issues
+categories:
+  - productivity
+  - customer-support
+runtime: node
+entrypoint: dist/index.js
+buildCommand: npm install && npm run build
+environment:
+  PYLON_API_TOKEN:
+    description: Your Pylon API token (generate in Pylon dashboard)
+    required: true
+    secret: true
+tools:
+  # User Management
+  - name: pylon_get_me
+    description: Get current user information from Pylon
+  - name: pylon_get_users
+    description: Get all users from Pylon
+  - name: pylon_search_users
+    description: Search for users in Pylon
+  
+  # Contact Management
+  - name: pylon_get_contacts
+    description: Get contacts from Pylon with optional search and limit
+  - name: pylon_create_contact
+    description: Create a new contact in Pylon
+  - name: pylon_search_contacts
+    description: Search for contacts in Pylon
+  
+  # Issue Management
+  - name: pylon_get_issues
+    description: Get issues from Pylon with optional filtering
+  - name: pylon_create_issue
+    description: Create a new issue in Pylon
+  - name: pylon_search_issues
+    description: Search for issues in Pylon
+  - name: pylon_get_issue
+    description: Get a specific issue by ID
+  - name: pylon_update_issue
+    description: Update an existing issue
+  - name: pylon_snooze_issue
+    description: Snooze an issue until a specified time
+  
+  # Issue Messages
+  - name: pylon_get_issue_messages
+    description: Get messages for a specific issue
+  - name: pylon_create_issue_message
+    description: Create a new message for an issue
+  
+  # Knowledge Base
+  - name: pylon_get_knowledge_bases
+    description: Get all knowledge bases from Pylon
+  - name: pylon_get_knowledge_base_articles
+    description: Get articles from a specific knowledge base
+  - name: pylon_create_knowledge_base_article
+    description: Create a new article in a knowledge base
+  
+  # Team Management
+  - name: pylon_get_teams
+    description: Get all teams from Pylon
+  - name: pylon_get_team
+    description: Get a specific team by ID
+  - name: pylon_create_team
+    description: Create a new team
+  
+  # Account Management
+  - name: pylon_get_accounts
+    description: Get all accounts from Pylon
+  - name: pylon_get_account
+    description: Get a specific account by ID
+  
+  # Tag Management
+  - name: pylon_get_tags
+    description: Get all tags from Pylon
+  - name: pylon_create_tag
+    description: Create a new tag
+  
+  # Ticket Forms
+  - name: pylon_get_ticket_forms
+    description: Get all ticket forms from Pylon
+  - name: pylon_create_ticket_form
+    description: Create a new ticket form
+  
+  # Webhook Management
+  - name: pylon_get_webhooks
+    description: Get all webhooks from Pylon
+  - name: pylon_create_webhook
+    description: Create a new webhook
+  - name: pylon_delete_webhook
+    description: Delete a webhook
