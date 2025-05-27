@@ -2,7 +2,7 @@ name: pylon-mcp-server
 displayName: Pylon MCP Server
 description: MCP server for integrating with Pylon API - manage contacts, issues, and knowledge base articles
 version: 1.0.0
-author: Community
+author: Marcin Wyszynski
 homepage: https://github.com/marcinwyszynski/pylon-mcp-server
 license: MIT
 keywords:
@@ -16,6 +16,8 @@ categories:
   - productivity
   - customer-support
 runtime: node
+requirements:
+  node: ">=16.0.0"
 entrypoint: dist/index.js
 buildCommand: npm install && npm run build
 environment:
