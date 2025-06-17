@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/marcinwyszynski-pylon-mcp-badge.png)](https://mseep.ai/app/marcinwyszynski-pylon-mcp)
+
 # Pylon MCP Server
 
 An MCP (Model Context Protocol) server for integrating with the Pylon API.
